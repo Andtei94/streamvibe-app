@@ -8,16 +8,16 @@ runConfig:
   # The number of CPUs. Higher values improve performance for concurrent
   # requests and CPU-intensive tasks like AI inference or video processing.
   # 4 CPUs is a good balance for moderate to heavy workloads.
-  cpu: 4
+  cpu: 2
 
   # The memory allocation. 8192MiB (8GiB) is a robust amount for handling
   # large files and complex AI models without memory-related crashes.
-  memoryMiB: 8192
+  memoryMiB: 4096
 
   # Increase this value if you'd like to automatically spin up
   # more instances in response to increased traffic. This helps maintain
   # performance during traffic spikes.
-  maxInstances: 10
+  maxInstances: 2
 
 # Defines environment variables that will be available to the running app.
 # Secret variables should be defined here with 'secret: true'. Their values
