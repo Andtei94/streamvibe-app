@@ -9,18 +9,18 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Info, Loader2, Sparkles, CheckCircle2, XCircle } from 'lucide-react';
+import { Info, Loader2, Sparkles } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { logger } from '@/lib/logger';
 import { isUrl } from '@/lib/utils';
-import DOMPurify from 'isomorphic-dompurify';
+import { sanitizeString } from '@/utils/sanitize-string';
 
 const formSchema = z.object({
   source: z.string().trim().min(10, 'Please enter a valid URL.')
     .refine(s => {
       const trimmed = s.trim();
       if (!isUrl(trimmed)) return false;
-      if (/<script/i.test(trimmed)) return false;
+      if (/<script/i.test(trimmed)) return false; 
       return true; 
     }, 'Input must be a valid URL starting with http or https.'),
 });
@@ -48,8 +48,8 @@ const cleanTitleFromPath = (path: string) => {
 };
 
 const analyzeSource = (source: string): UrlInfo => {
-    source = DOMPurify.sanitize(source.trim(), { USE_PROFILES: { html: false } });
-    let url = source;
+    const sanitizedSource = sanitizeString(source.trim());
+    let url = sanitizedSource;
     let title = 'Web Content';
 
     if (!isUrl(url)) {
@@ -105,7 +105,6 @@ export function UrlUploadForm({ onProcess }: UrlUploadFormProps) {
         throw new Error(detectedInfo?.error || "Could not analyze the provided source. Please check the URL.");
       }
       
-      // isPlayable and isDownloadable are no longer relevant here as we always download first.
       const result = await onProcess(detectedInfo.title, detectedInfo.url, true, false);
       
       if(result.success) {

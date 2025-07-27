@@ -8,8 +8,8 @@ import {ai} from '@/ai/init';
 import {z} from 'genkit';
 import { TranslateSubtitlesInputSchema, type TranslateSubtitlesInput, TranslateSubtitlesOutputSchema, type TranslateSubtitlesOutput } from '../schemas';
 import { logger } from '@/lib/logger';
-import DOMPurify from 'isomorphic-dompurify';
 import { parse as parseVtt } from 'subtitle';
+import { sanitizeString } from '@/utils/sanitize-string';
 
 export async function translateSubtitles(input: TranslateSubtitlesInput): Promise<TranslateSubtitlesOutput> {  return translateSubtitlesFlow(input);}
 
@@ -59,7 +59,7 @@ const translateSubtitlesFlow = ai.defineFlow(
     }
 
     try {
-        const sanitizedContent = DOMPurify.sanitize(subtitleContent);
+        const sanitizedContent = subtitleContent;
         
         try {
             parseVtt(sanitizedContent);

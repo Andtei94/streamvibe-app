@@ -7,7 +7,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { collection, addDoc, updateDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import DOMPurify from 'isomorphic-dompurify';
 import {
   Dialog,
   DialogContent,
@@ -31,6 +30,7 @@ import { Sparkles, Loader2 } from 'lucide-react';
 import { generateChannelMetadata } from '@/ai/actions';
 import type { LiveChannel } from '@/lib/types';
 import { logger } from '@/lib/logger';
+import { sanitizeString } from '@/utils/sanitize-string';
 
 // Client-side schema is simplified as the robust validation is on the server.
 const formSchema = z.object({
@@ -69,8 +69,8 @@ export function AddChannelForm({ isOpen, onOpenChange, initialData }: AddChannel
     setIsProcessing(true);
     try {
         const sanitizedValues = {
-          name: DOMPurify.sanitize(values.name),
-          url: DOMPurify.sanitize(values.url)
+          name: sanitizeString(values.name),
+          url: values.url
         };
         
         if (initialData) {

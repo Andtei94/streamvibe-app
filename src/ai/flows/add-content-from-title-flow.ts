@@ -17,8 +17,8 @@ import type { Content } from '@/lib/types';
 import { AddContentFromTitleInputSchema, type AddContentFromTitleInput, AddContentFromTitleOutputSchema, type AddContentFromTitleOutput } from '../schemas';
 import { randomUUID } from 'crypto';
 import { logger } from '@/lib/logger';
-import DOMPurify from 'isomorphic-dompurify';
 import { extractEpisodeInfo } from './utils/episode-parser';
+import { sanitizeString } from '@/utils/sanitize-string';
 
 export async function addContentFromTitle(input: AddContentFromTitleInput): Promise<AddContentFromTitleOutput> {
   return addContentFromTitleFlow(input);
@@ -43,8 +43,7 @@ const addContentFromTitleFlow = ai.defineFlow(
       // Step 1: Input validation and robust sanitization.
       logger.info({ ...logMeta, step: 'Input Validation' }, 'Starting input validation and sanitization.');
       const parsedInput = AddContentFromTitleInputSchema.parse(input);
-      // Use default DOMPurify config for strong XSS protection, then trim.
-      const sanitizedTitle = DOMPurify.sanitize(parsedInput.title, { FORBID_ATTR: ['style'], FORBID_TAGS: ['script', 'style', 'iframe', 'object'] }).trim();
+      const sanitizedTitle = sanitizeString(parsedInput.title, 500);
 
       if (sanitizedTitle.length > 500) {
         throw new Error("Title too long. Must be under 500 characters.");

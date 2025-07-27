@@ -12,7 +12,7 @@ import { reprocessVideo, processExternalUrl } from '@/ai/actions';
 import { logger } from '@/lib/logger';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { isUrl } from '@/lib/utils';
-import DOMPurify from 'isomorphic-dompurify';
+import { sanitizeString } from '@/utils/sanitize-string';
 
 export default function UploadClient() {
   const [isProcessingUrl, setIsProcessingUrl] = useState(false);
@@ -30,7 +30,7 @@ export default function UploadClient() {
       return { success: false };
     }
 
-    const sanitizedTitle = DOMPurify.sanitize(title);
+    const sanitizedTitle = sanitizeString(title);
     
     try {
         // This is the new, robust 2-step process.
