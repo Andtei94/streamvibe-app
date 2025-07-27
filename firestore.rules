@@ -1,0 +1,77 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+  
+    // --- Helper Functions ---
+    
+    // Checks if the user is authenticated
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    // Securely checks if the user has admin privileges by checking a protected document
+    function isAdmin() {
+      return exists(/databases/$(database)/documents/_private/access_control/$(request.auth.uid));
+    }
+    
+    // Checks if a string is a valid ID format (non-empty, specific length, etc.)
+    function isValidId(id) {
+      return id is string && id.matches("^[a-zA-Z0-9]{20,}$");
+    }
+    
+    // Validates if a list contains only non-empty strings
+    function isListOfStrings(list) {
+      return list is list && list.size() < 20 && list.every(item, item is string && item.size() > 0 && item.size() < 50);
+    }
+    
+    // Comprehensive validation for the 'content' document data
+    function isContentDataValid(data) {
+      return data.title is string && data.title.size() > 0 && data.title.size() < 150
+          && data.description is string && data.description.size() > 0
+          && data.longDescription is string
+          && data.type is string && ['movie', 'tv-show', 'music', 'sports'].hasAny([data.type])
+          && isListOfStrings(data.genres)
+          && isListOfStrings(data.actors)
+          && data.releaseDate is timestamp
+          && data.rating is string && data.rating.size() > 0
+          && data.duration is string && data.duration.size() > 0
+          && data.imageUrl is string && data.imageUrl.size() > 0
+          && data.videoUrl is string
+          && data.canPlay is bool
+          && data.canDownload is bool
+          && data.featured is bool;
+    }
+
+    // --- Public Rules ---
+    
+    // 'content' collection: anyone can read, only admins can write
+    match /content/{contentId} {
+      allow read: if true;
+      allow write: if isAdmin() && isContentDataValid(request.resource.data);
+    }
+    
+    // '_private' collection: No client access allowed.
+    // This collection stores sensitive data like the list of admins.
+    match /_private/{docId} {
+        allow read, write: if false;
+    }
+
+    // --- User-Specific Rules ---
+    
+    // Users can only access their own data within the 'users' collection.
+    match /users/{userId} {
+        allow read, write: if isSignedIn() && request.auth.uid == userId;
+    }
+    
+    // Rules for the 'my-list' sub-collection
+    match /users/{userId}/my-list/{contentId} {
+        allow read, write: if isSignedIn() && request.auth.uid == userId && isValidId(contentId);
+    }
+    
+    // Rules for the 'playbackProgress' sub-collection
+    match /users/{userId}/playbackProgress/{contentId} {
+        allow read, write: if isSignedIn() && request.auth.uid == userId && isValidId(contentId);
+    }
+  }
+}

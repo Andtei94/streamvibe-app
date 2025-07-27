@@ -1,0 +1,41 @@
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+  
+    // WARNING: These rules are wide open for development.
+    // Before deploying to production, you MUST implement secure rules
+    // based on user authentication.
+    match /{document=**} {
+      allow read, write: if true;
+    }
+    
+    // EXAMPLE of secure rules for a production app with authentication:
+    /*
+    match /users/{userId} {
+        // A user can read/write their own data
+        allow read, update, delete: if request.auth.uid == userId;
+        allow create: if request.auth.uid != null;
+    }
+
+    match /users/{userId}/my-list/{contentId} {
+        allow read, write, delete: if request.auth.uid == userId;
+    }
+
+    match /users/{userId}/continue-watching/{contentId} {
+        allow read, write: if request.auth.uid == userId;
+    }
+
+    match /content/{contentId} {
+        // Any authenticated user can read content if they have a subscription
+        allow read: if request.auth.uid != null &&
+                      exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+                      get(/databases/$(database)/documents/users/$(request.auth.uid)).data.subscriptionStatus == 'active';
+                      
+        // Only admins can write content
+        allow write: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    */
+  }
+}

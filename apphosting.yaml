@@ -1,0 +1,38 @@
+# Settings to manage and configure a Firebase App Hosting backend.
+# https://firebase.google.com/docs/app-hosting/configure
+
+# WARNING: Increased memory/CPU can lead to higher costs.
+# These settings below are configured for high performance, supporting
+# AI/ML tasks and large file processing.
+runConfig:
+  # The number of CPUs. Higher values improve performance for concurrent
+  # requests and CPU-intensive tasks like AI inference or video processing.
+  # 4 CPUs is a good balance for moderate to heavy workloads.
+  cpu: 4
+
+  # The memory allocation. 8192MiB (8GiB) is a robust amount for handling
+  # large files and complex AI models without memory-related crashes.
+  memoryMiB: 8192
+
+  # Increase this value if you'd like to automatically spin up
+  # more instances in response to increased traffic. This helps maintain
+  # performance during traffic spikes.
+  maxInstances: 10
+
+# Defines environment variables that will be available to the running app.
+# Secret variables should be defined here with 'secret: true'. Their values
+# can then be managed securely in the Firebase console.
+# After the first successful deployment, you can manage these values in the
+# Firebase console under App Hosting settings.
+environment:
+  NEXT_PUBLIC_FIREBASE_API_KEY: ${NEXT_PUBLIC_FIREBASE_API_KEY}
+  NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN}
+  NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${NEXT_PUBLIC_FIREBASE_PROJECT_ID}
+  NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET}
+  NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID}
+  NEXT_PUBLIC_FIREBASE_APP_ID: ${NEXT_PUBLIC_FIREBASE_APP_ID}
+  NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: ${NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID}
+  FIREBASE_SERVICE_ACCOUNT:
+    secret: true
+  GEMINI_API_KEY:
+    secret: true

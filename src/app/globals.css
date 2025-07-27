@@ -1,0 +1,87 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 84% 4.9%; /* Very dark gray, slightly blueish */
+    --foreground: 210 40% 98%;
+
+    --card: 224 71% 4%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 224 71% 4%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 263 87% 65%; /* Default: Purple */
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 224 71% 10%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 224 71% 10%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 173 95% 42%; /* Default: Teal */
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 263 87% 65%;
+    
+    --radius: 0.5rem;
+  }
+ 
+  .dark {
+    --background: 222 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 224 71% 4%;
+    --card-foreground: 210 40% 98%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 210 40% 98%;
+    --secondary: 224 71% 10%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 224 71% 10%;
+    --muted-foreground: 215 20% 65%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+  }
+
+  .light {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  *:focus-visible {
+      @apply ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+  video::cue {
+    font-size: var(--cue-font-size, 1rem);
+    color: var(--cue-text-color, white);
+    background-color: var(--cue-bg-color, rgba(0, 0, 0, 0.5));
+  }
+}

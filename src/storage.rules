@@ -1,0 +1,16 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Allow public read access to all files.
+    // This is necessary for displaying images, playing videos, etc.
+    match /{allPaths=**} {
+      allow read: if true;
+
+      // Disallow all writes from the client-side.
+      // All file uploads MUST go through trusted server-side code
+      // (e.g., a Genkit flow that validates and then uploads).
+      allow write: if false;
+    }
+  }
+}

@@ -1,0 +1,42 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+  
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return request.auth.token.admin == true;
+    }
+
+    // Allow public read access to all files in the `images` directory.
+    // This is necessary for posters and logos to be displayed in the app.
+    match /images/{allPaths=**} {
+      allow read: if true;
+    }
+    
+    // Allow public read access for all other files (videos, subtitles, etc.).
+    // Your app's logic and Firestore rules should control who gets the URL.
+    match /{allPaths=**} {
+        allow read: if true;
+    }
+    
+    // Only authenticated users can upload files, and only to the 'uploads/' directory.
+    // This prevents unauthorized users from filling up your storage.
+    match /uploads/{fileName} {
+      allow write: if request.auth != null &&
+                      request.resource.size < (15 * 1024 * 1024 * 1024) && // 15 GB limit
+                      request.resource.contentType.matches('video/.*|audio/.*'); // Only allow video/audio
+    }
+    
+    // Only admins can delete files from the 'uploads/' directory.
+    match /uploads/{fileName} {
+        allow delete: if isAdmin();
+    }
+    
+    // Fallback: Deny all other writes/deletes.
+    allow write, delete: if false;
+  }
+}
