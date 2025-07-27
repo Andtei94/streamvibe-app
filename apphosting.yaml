@@ -18,16 +18,3 @@ runConfig:
   # more instances in response to increased traffic. This helps maintain
   # performance during traffic spikes.
   maxInstances: 2
-
-# Defines environment variables that will be available to the running app.
-# Secret variables should be defined here with 'secret: true'. Their values
-# can then be managed securely in the Firebase console.
-# After the first successful deployment, you can manage these values in the
-# Firebase console under App Hosting settings.
-# NOTE: The NEXT_PUBLIC_FIREBASE_* variables are automatically managed
-# and injected by Firebase App Hosting. They do not need to be specified here.
-environment:
-  FIREBASE_SERVICE_ACCOUNT:
-    secret: true
-  GEMINI_API_KEY:
-    secret: true
